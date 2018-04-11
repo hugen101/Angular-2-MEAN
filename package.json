@@ -1,0 +1,29 @@
+{
+  "name": "mean-ang2",
+  "version": "1.0.0",
+  "description": "MEAN stack with angular 2",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hugen101/Angular-2-MEAN.git"
+  },
+  "keywords": [
+    "MEAN",
+    "Stack",
+    "Angular",
+    "2"
+  ],
+  "author": "Matthew Hugen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hugen101/Angular-2-MEAN/issues"
+  },
+  "homepage": "https://github.com/hugen101/Angular-2-MEAN#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "mongoose": "^5.0.14"
+  }
+}

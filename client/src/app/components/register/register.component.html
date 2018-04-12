@@ -1,0 +1,68 @@
+<h1>Register Page</h1>
+
+<form [formGroup]="form" (submit)="onRegisterSubmit()">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input formControlName="username" type="text" class="form-control" placeholder="Enter username" autocomplete="off" 
+      [ngClass]="{
+        'is-invalid': (form.controls.username.invalid && form.controls.username.dirty),
+        'is-valid': (!form.controls.username.invalid && form.controls.username.dirty)
+      }">
+      <div class="form-control-feedback"
+            *ngIf="form.controls.username.errors && (form.controls.username.dirty || form.controls.username.touched)">
+        <p *ngIf="form.controls.username.errors.required">Username is required</p>
+        <p *ngIf="form.controls.username.errors.minlength">Username must be at least 3 characters long, we need another {{form.controls.username.errors.minlength.requiredLength - form.controls.username.errors.minlength.actualLength}} characters </p>
+        <p *ngIf="form.controls.username.errors.maxlength">Username must be no longer than 15 characters. You have {{form.controls.username.errors.maxlength.actualLength - form.controls.username.errors.maxlength.requiredLength}} extra characters </p>
+        <p *ngIf="form.controls.email.errors?.validateUsername">Username must not have special characters</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="email">Email address</label>
+      <div>
+        <input
+         formControlName="email" type="text" class="form-control"  placeholder="Enter email" autocomplete="off"
+         [ngClass]="{
+          'is-invalid': (form.controls.email.invalid && form.controls.email.dirty),
+          'is-valid': (!form.controls.email.invalid && form.controls.email.dirty)
+        }">
+        <div class="form-control-feedback"
+            *ngIf="form.controls.email.errors && (form.controls.email.dirty || form.controls.email.touched)">
+        <p *ngIf="form.controls.email.errors?.required">email is required</p>
+        <p *ngIf="form.controls.email.errors?.minlength">email must be at least 5 characters long, we need another {{form.controls.email.errors.minlength.requiredLength - form.controls.email.errors.minlength.actualLength}} characters </p>
+        <p *ngIf="form.controls.email.errors?.maxlength">email must be no longer than 30 characters. You have {{form.controls.email.errors.maxlength.actualLength - form.controls.email.errors.maxlength.requiredLength}} extra characters </p>
+        <p *ngIf="form.controls.email.errors?.validateEmail">This must be a valid email</p>
+      </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input formControlName="password" type="text" class="form-control" placeholder="Password" autocomplete="off" 
+      [ngClass]="{
+        'is-invalid': (form.controls.password.invalid && form.controls.password.dirty),
+        'is-valid': (!form.controls.password.invalid && form.controls.password.dirty)
+      }">
+      <div class="form-control-feedback"
+            *ngIf="form.controls.password.errors && (form.controls.password.dirty || form.controls.password.touched)">
+        <p *ngIf="form.controls.password.errors.required">password is required</p>
+        <p *ngIf="form.controls.password.errors.minlength">password must be at least 8 characters long, we need another {{form.controls.password.errors.minlength.requiredLength - form.controls.password.errors.minlength.actualLength}} characters </p>
+        <p *ngIf="form.controls.password.errors.maxlength">password must be no longer than 15 characters. You have {{form.controls.password.errors.maxlength.actualLength - form.controls.password.errors.maxlength.requiredLength}} extra characters </p>
+        <p *ngIf="form.controls.email.errors?.validatePassword">Password must have at least 1 letter, 1 number, and 1 special character</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="confirm">Confirm Password</label>
+      <input formControlName="confirm" type="text" class="form-control" placeholder="*Confirm Password" autocomplete="off" 
+      [ngClass]="{
+        'is-invalid': (form.controls.confirm.invalid && form.controls.confirm.dirty) || (form.errors?.matchingPasswords && form.controls.confirm.dirty),
+        'is-valid': (!form.controls.confirm.errors && !form.errors?.matchingPasswords && form.controls.confirm.dirty)
+      }">
+      <div class="form-control-feedback"
+            *ngIf="form.controls.confirm.errors && !form.errors?.matchingPasswords && form.controls.confirm.dirty">
+        <p *ngIf="form.errors?.matchingPasswords">Passwords do not match</p>
+      </div>
+    </div>
+    <input [disabled]="!form.valid" type="submit" class="btn btn-primary" value="Submit" />
+</form>
+
+<!-- <p>Value: {{ form.value | json }}</p>
+<p>Validation status: {{ form.status }}</p> -->

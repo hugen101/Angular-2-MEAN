@@ -1,5 +1,11 @@
 <h1>Register Page</h1>
 
+<div class="row show-hide-message">
+  <div [ngClass]="messageClass">
+    {{ message }}
+  </div>
+</div>
+
 <form [formGroup]="form" (submit)="onRegisterSubmit()">
     <div class="form-group">
       <label for="username">Username</label>
@@ -46,7 +52,7 @@
         <p *ngIf="form.controls.password.errors.required">password is required</p>
         <p *ngIf="form.controls.password.errors.minlength">password must be at least 8 characters long, we need another {{form.controls.password.errors.minlength.requiredLength - form.controls.password.errors.minlength.actualLength}} characters </p>
         <p *ngIf="form.controls.password.errors.maxlength">password must be no longer than 15 characters. You have {{form.controls.password.errors.maxlength.actualLength - form.controls.password.errors.maxlength.requiredLength}} extra characters </p>
-        <p *ngIf="form.controls.email.errors?.validatePassword">Password must have at least 1 letter, 1 number, and 1 special character</p>
+        <p *ngIf="form.controls.password.errors?.validatePassword">Password must have at least 1 letter, 1 number, and 1 special character</p>
       </div>
     </div>
     <div class="form-group">
@@ -61,7 +67,7 @@
         <p *ngIf="form.errors?.matchingPasswords">Passwords do not match</p>
       </div>
     </div>
-    <input [disabled]="!form.valid" type="submit" class="btn btn-primary" value="Submit" />
+    <input [disabled]="!form.valid || processing" type="submit" class="btn btn-primary" value="Submit" />
 </form>
 
 <!-- <p>Value: {{ form.value | json }}</p>

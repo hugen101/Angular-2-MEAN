@@ -7,6 +7,8 @@ const path = require('path');
 const authentication = require('./routes/authentication')(router);
 const bodyParser = require('body-parser');
 
+const cors = require('cors');
+
 
 mongoose.Promise = global.Promise;
 mongoose.connect(config.uri, (err) => {
@@ -16,6 +18,11 @@ mongoose.connect(config.uri, (err) => {
         console.log('Connected to database: ' + config.db);
     }
 });
+
+// middleware
+app.use(cors({
+    origin: 'http://localhost:4200'
+}));
 
 // Provide static directory for frontend
 // parse application/x-www-form-urlencoded

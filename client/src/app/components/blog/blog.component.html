@@ -1,0 +1,125 @@
+<div class="blog">
+  <h1 class="page-header">Blog Feed</h1>
+
+  <div class="row show-hide-message" *ngIf="message && newPost">
+    <div [ngClass]="messageClass">
+      {{ message }}
+    </div>
+
+  </div>
+
+  <button type="button" name="button" 
+          class="btn btn-warning" *ngIf="!newPost" 
+          (click) = "newBlogForm()">New Post</button>
+  <button [disabled]="loadingBlogs" type="button" 
+          name="button" class="btn btn-default" 
+          *ngIf="!newPost" (click) = "reloadBlogs()">
+          <i class="fa fa-repeat" aria-hidden="true"></i> Reload</button>
+  <br>
+  <br>
+
+  <!-- new blog form -->
+  <form [formGroup]="form" name="blogForm" (submit)="onBlogSubmit()" *ngIf="newPost">
+    <div class="form-group">
+      <label for="title">Title</label>
+      <div class="">
+        <input [ngClass]="{
+          'is-invalid': (form.controls.title.invalid && form.controls.title.dirty), 
+          'is-valid': form.controls.title.valid }" 
+          type="text" name="title" class="form-control" placeholder="*Blog Title" 
+          autocomplete="off" formControlName="title" />
+        <div class="form-control-feedback"
+          *ngIf="form.controls.title.errors && (form.controls.title.dirty || form.controls.title.touched)">
+          <p *ngIf="form.controls.title.errors.required">Title is required</p>
+          <p *ngIf="form.controls.title.errors.minlength">Title must be at least 5 characters long, we need another {{form.controls.title.errors.minlength.requiredLength - form.controls.title.errors.minlength.actualLength}} characters </p>
+          <p *ngIf="form.controls.title.errors.maxlength">Title must be no longer than 500 characters. You have {{form.controls.title.errors.maxlength.actualLength - form.controls.title.errors.maxlength.requiredLength}} extra characters </p>
+          <p *ngIf="form.controls.title.errors?.alphaNumericValidation && form.controls.title.dirty">Title must be letters or numbers</p>
+        </div>
+      </div>
+
+      <!-- Body input -->
+      <div class="form-group">
+          <label for="body">body</label>
+          <div class="">
+            <textarea [ngClass]="{
+              'is-invalid': (form.controls.body.invalid && form.controls.body.dirty), 
+              'is-valid': form.controls.body.valid }" 
+               name="body" rows="8" cols="80" placeholder="*Body" class="form-control" formControlName="body" >
+            </textarea>
+            <div class="form-control-feedback"
+              *ngIf="form.controls.body.errors && (form.controls.body.dirty || form.controls.body.touched)">
+              <p *ngIf="form.controls.body.errors.required">Body is required</p>
+              <p *ngIf="form.controls.body.errors.minlength">Body must be at least 5 characters long, we need another {{form.controls.body.errors.minlength.requiredLength - form.controls.body.errors.minlength.actualLength}} characters </p>
+              <p *ngIf="form.controls.body.errors.maxlength">Body must be no longer than 50 characters. You have {{form.controls.body.errors.maxlength.actualLength - form.controls.body.errors.maxlength.requiredLength}} extra characters </p>
+            </div>
+          </div>
+        </div>
+    </div>
+
+  <button [disabled]="processing" type="button" name="button" (click)="goBack()" class="btn btn-warning">Go Back</button>
+  <button [disabled]="processing" type="submit" name="button" class="btn btn-success">Submit</button>
+
+  </form>
+  <!-- new blog form -->
+
+  <div *ngIf="!newPost">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Post title</h3>
+      </div>
+      <div class="card-body">
+        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been 
+          the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
+          type and scrambled it to make a type specimen book. It has survived not only five centuries, but also
+            the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s 
+            with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
+            publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+      </div>
+      <div class="card-footer">
+        <strong>Posted by: </strong>mghugen09
+        <br />
+        <strong>Date: </strong>May 25, 2018
+        <br />
+        <div>
+          <strong>Likes: </strong>25
+          <br />
+          <strong>Dislikes: </strong>15
+          <br />
+        </div>
+        <a href="#"><button type="button" name="button" class="btn btn-sm btn-info">Edit</button></a>
+        <a href="#"><button type="button" name="button" class="btn btn-sm btn-danger">Delete</button></a>
+        <!-- likes dropdown -->
+        <div class="dropdown likes-dropdown">
+          <button type="button" name="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown"><i class="fa fa-thumbs-up" aria-hidden="true"></i>Likes: 21</button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="#">matt</a>
+            <a class="dropdown-item" href="#">josh</a>
+            <a class="dropdown-item" href="#">alex</a>
+          </div>
+        </div>
+        <!-- dislikes dropdown -->
+        <div class="dropdown likes-dropdown">
+            <button type="button" name="button" class="btn btn-sm btn-warning dropdown-toggle" data-toggle="dropdown"><i class="fa fa-thumbs-down" aria-hidden="true"></i>Dislikes: 21</button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="#">matt</a>
+              <a class="dropdown-item" href="#">josh</a>
+              <a class="dropdown-item" href="#">alex</a>
+            </div>
+          </div>
+      </div>
+      <!-- footer End -->
+
+      <ul class="list-group">
+        <li class="list-group-item">
+            <button type="button" name="button" class="btn btn-sm btn-danger" (click)="draftComment">Post Comment</button>
+            <br>
+            <!-- <form>
+              <textarea name="name" rows="10" cols="30" class="form-control"></textarea>
+              <button type="button" name="button" class="btn btn-sm btn-info" (click)="">Submit Post</button>
+              <button type="button" name="button" class="btn btn-sm btn-danger" (click)="">Cancel</button>
+            </form> -->
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

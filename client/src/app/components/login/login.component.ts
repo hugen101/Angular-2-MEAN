@@ -3,6 +3,8 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { AuthGuard } from '../../guards/auth.guard';
+import { FaInputComponent } from '../inputs/fa-input/fa-input.component';
+
 
 @Component({
   selector: 'app-login',

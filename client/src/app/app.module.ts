@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
+import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { FlashMessagesModule } from 'angular2-flash-messages';
@@ -8,6 +9,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthGuard } from './guards/auth.guard';
 import { NotAuthGuard } from './guards/notAuth.guard';
+import {PopoverModule} from "ngx-popover";
 
 
 import { AppComponent } from './app.component';
@@ -21,6 +23,10 @@ import { BlogComponent } from './components/blog/blog.component';
 
 import { AuthService } from './services/auth.service';
 import { BlogService } from './services/blog.service';
+import { EditBlogComponent } from './components/blog/edit-blog/edit-blog.component';
+import { DeleteBlogComponent } from './components/blog/delete-blog/delete-blog.component';
+import { PublicProfileComponent } from './components/public-profile/public-profile.component';
+import { FaInputComponent } from './components/inputs/fa-input/fa-input.component';
 
 
 export function tokenGetter() {
@@ -36,12 +42,17 @@ export function tokenGetter() {
     RegisterComponent,
     LoginComponent,
     ProfileComponent,
-    BlogComponent
+    BlogComponent,
+    EditBlogComponent,
+    DeleteBlogComponent,
+    PublicProfileComponent,
+    FaInputComponent
   ],
   imports: [
     BrowserModule,
     HttpModule,
     AppRoutingModule,
+    FormsModule,
     ReactiveFormsModule,
     FlashMessagesModule.forRoot(),
     HttpClientModule,
@@ -51,6 +62,7 @@ export function tokenGetter() {
         whitelistedDomains: ['localhost:4200']
       }
     }),
+    PopoverModule,
   ],
   providers: [
     AuthService,

@@ -63,47 +63,53 @@
   <!-- new blog form -->
 
   <div *ngIf="!newPost">
-    <div class="card">
+    <div class="card" *ngFor="let blog of blogPosts">
       <div class="card-header">
-        <h3 class="card-title">Post title</h3>
+        <h3 class="card-title">{{blog.title}}</h3>
       </div>
       <div class="card-body">
-        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been 
-          the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
-          type and scrambled it to make a type specimen book. It has survived not only five centuries, but also
-            the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s 
-            with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
-            publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+        <p>{{blog.body}}</p>
       </div>
       <div class="card-footer">
-        <strong>Posted by: </strong>mghugen09
+        <strong>Posted by: </strong>{{ blog.createdBy }}
         <br />
-        <strong>Date: </strong>May 25, 2018
+        <strong>Date: </strong>{{ blog.createdAt | date:'MMM dd, yyy' }}
         <br />
-        <div>
-          <strong>Likes: </strong>25
+        <div *ngIf="username === blog.createdBy">
+          <strong>Likes: </strong>{{ blog.likes }}
           <br />
-          <strong>Dislikes: </strong>15
+          <strong>Dislikes: </strong>{{ blog.disLikes }}
           <br />
         </div>
-        <a href="#"><button type="button" name="button" class="btn btn-sm btn-info">Edit</button></a>
-        <a href="#"><button type="button" name="button" class="btn btn-sm btn-danger">Delete</button></a>
+        <a [routerLink]="['/edit-blog/', blog._id]" *ngIf="username === blog.createdBy"><button type="button" name="button" class="btn btn-sm btn-info">Edit</button></a>
+        <a [routerLink]="['/delete-blog/', blog._id]" *ngIf="username === blog.createdBy"><button type="button" name="button" class="btn btn-sm btn-danger">Delete</button></a>
         <!-- likes dropdown -->
-        <div class="dropdown likes-dropdown">
-          <button type="button" name="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown"><i class="fa fa-thumbs-up" aria-hidden="true"></i>Likes: 21</button>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="#">matt</a>
-            <a class="dropdown-item" href="#">josh</a>
-            <a class="dropdown-item" href="#">alex</a>
-          </div>
+        <div class="likes-dropdown">
+            <span class="dropdown-toggle"></span>
+            <span data-toggle="dropdown" >
+                Likes: {{blog.likes}}
+            </span>
+          <button [disabled]="blog.likedBy.indexOf(username) > -1"
+          type="button" name="button" class="btn btn-sm btn-success"
+            *ngIf="username !== blog.createdBy" (click)="likeBlog(blog._id)">
+            <i class="fa fa-thumbs-up" aria-hidden="true" ></i></button>
+            <div class="dropdown-menu">
+                <a  [routerLink]= "['/user/', liker]" *ngFor="let liker of blog.likedBy" class="dropdown-item" > {{liker}} </a>
+              </div>
         </div>
         <!-- dislikes dropdown -->
         <div class="dropdown likes-dropdown">
-            <button type="button" name="button" class="btn btn-sm btn-warning dropdown-toggle" data-toggle="dropdown"><i class="fa fa-thumbs-down" aria-hidden="true"></i>Dislikes: 21</button>
+          <span class="dropdown-toggle"></span>
+          <span data-toggle="dropdown" >
+              Dislikes: {{blog.disLikes}}
+          </span>
+            <button [disabled]="blog.disLikedBy.indexOf(username) > -1"  
+              type="button" name="button" class="btn btn-sm btn-warning" 
+              *ngIf="username !== blog.createdBy" (click)="disLikeBlog(blog._id)">
+              <i class="fa fa-thumbs-down" aria-hidden="true" ></i>
+            </button>
             <div class="dropdown-menu">
-              <a class="dropdown-item" href="#">matt</a>
-              <a class="dropdown-item" href="#">josh</a>
-              <a class="dropdown-item" href="#">alex</a>
+              <a  [routerLink]= "['/user/', disliker]" *ngFor="let disliker of blog.disLikedBy" class="dropdown-item" > {{disliker}} </a>
             </div>
           </div>
       </div>
@@ -111,13 +117,45 @@
 
       <ul class="list-group">
         <li class="list-group-item">
-            <button type="button" name="button" class="btn btn-sm btn-danger" (click)="draftComment">Post Comment</button>
+            <button [disabled]="newComment.indexOf(blog._id) > -1" 
+                    type="button" name="button" class="btn btn-sm btn-danger" 
+                    (click)="draftComment(blog._id)">Post Comment</button>
             <br>
-            <!-- <form>
-              <textarea name="name" rows="10" cols="30" class="form-control"></textarea>
-              <button type="button" name="button" class="btn btn-sm btn-info" (click)="">Submit Post</button>
-              <button type="button" name="button" class="btn btn-sm btn-danger" (click)="">Cancel</button>
-            </form> -->
+            <div *ngIf="newComment.indexOf(blog._id) > -1">
+              <br>
+              <form [formGroup]="commentForm">
+                <textarea name="name" rows="10" cols="30" class="form-control" formControlName="comment" 
+                        [ngClass]="{ 'is-invalid': (commentForm.controls.comment.invalid && commentForm.controls.comment.dirty), 
+                          'is-valid': commentForm.controls.comment.valid }" ></textarea>
+                <div class="form-control-feedback"
+                      *ngIf="commentForm.controls.comment.errors && 
+                      (commentForm.controls.comment.dirty || commentForm.controls.comment.touched)">
+                  <p *ngIf="commentForm.controls.comment.errors.required">Comment is required</p>
+                  <p *ngIf="commentForm.controls.comment.errors.minlength">Comment must be at least 1 character long, we need another {{commentForm.controls.comment.errors.minlength.requiredLength - commentForm.controls.comment.errors.minlength.actualLength}} characters </p>
+                  <p *ngIf="commentForm.controls.comment.errors.maxlength">Body must be no longer than 200 characters. You have {{commentForm.controls.comment.errors.maxlength.actualLength - commentForm.controls.comment.errors.maxlength.requiredLength}} extra characters </p>
+                </div>
+                <br>
+                <button [disabled]="!commentForm.valid || processing" type="submit" name="button" class="btn btn-sm btn-info" (click)="postComment(blog._id)">Submit Comment</button>
+                <button [disabled]="processing" type="button" name="button" class="btn btn-sm btn-danger" (click)="cancelSubmission(blog._id)">Cancel</button>
+              </form>
+            </div>
+            <p *ngIf="enabledComments.indexOf(blog._id) === -1 && blog.comments.length > 0" class="list-group-item">
+              <span (click)="expand(blog._id)">
+                Show comments&nbsp;&nbsp;
+                <i class="fa fa-comment" aria-hidden="true"></i>
+              </span>
+            </p>
+            <p *ngIf="enabledComments.indexOf(blog._id) > -1" class="list-group-item">
+              <span (click)="collapse(blog._id)">
+                Hide Commments&nbsp;&nbsp;
+                <i class="fa fa-comment" aria-hidden="true"></i>
+              </span>
+            </p>
+            <div *ngIf="enabledComments.indexOf(blog._id) > -1">
+              <p *ngFor="let comment of blog.comments" class="list-group-item">
+                <strong> {{ comment.commentator }}: </strong> {{comment.comment}}
+              </p>
+            </div>
         </li>
       </ul>
     </div>
